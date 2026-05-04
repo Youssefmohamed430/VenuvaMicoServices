@@ -1,0 +1,46 @@
+# IDE and Editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+*.log
+
+# Build and dependency files
+target/
+*.class
+*.jar
+node_modules/
+npm-debug.log
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Maven files
+.m2/
+
+# Environment and configuration
+.env
+.env.local
+.env.*.local
+
+# Documentation
+*.md
+README.md
+HELP.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# OS files
+Thumbs.db
+
+# Logs
+logs/
+D:/
+E:/
