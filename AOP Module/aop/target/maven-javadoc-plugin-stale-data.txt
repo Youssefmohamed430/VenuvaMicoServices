@@ -1,0 +1,92 @@
+@options
+@packages
+-classpath
+'/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-aop/2.7.14/spring-boot-starter-aop-2.7.14.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter/2.7.14/spring-boot-starter-2.7.14.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot/2.7.14/spring-boot-2.7.14.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.14/spring-boot-autoconfigure-2.7.14.jar:/home/yusef/.m2/repository/jakarta/annotation/jakarta.annotation-api/1.3.5/jakarta.annotation-api-1.3.5.jar:/home/yusef/.m2/repository/org/yaml/snakeyaml/1.30/snakeyaml-1.30.jar:/home/yusef/.m2/repository/org/springframework/spring-aop/5.3.29/spring-aop-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-web/2.7.14/spring-boot-starter-web-2.7.14.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-json/2.7.14/spring-boot-starter-json-2.7.14.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.13.5/jackson-databind-2.13.5.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.5/jackson-annotations-2.13.5.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.13.5/jackson-core-2.13.5.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.13.5/jackson-datatype-jdk8-2.13.5.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.13.5/jackson-datatype-jsr310-2.13.5.jar:/home/yusef/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.13.5/jackson-module-parameter-names-2.13.5.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/2.7.14/spring-boot-starter-tomcat-2.7.14.jar:/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/9.0.78/tomcat-embed-core-9.0.78.jar:/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/9.0.78/tomcat-embed-el-9.0.78.jar:/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/9.0.78/tomcat-embed-websocket-9.0.78.jar:/home/yusef/.m2/repository/org/springframework/spring-web/5.3.29/spring-web-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/spring-webmvc/5.3.29/spring-webmvc-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/security/spring-security-core/5.7.10/spring-security-core-5.7.10.jar:/home/yusef/.m2/repository/org/springframework/security/spring-security-crypto/5.7.10/spring-security-crypto-5.7.10.jar:/home/yusef/.m2/repository/org/springframework/spring-beans/5.3.29/spring-beans-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/spring-context/5.3.29/spring-context-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/spring-core/5.3.29/spring-core-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/spring-jcl/5.3.29/spring-jcl-5.3.29.jar:/home/yusef/.m2/repository/org/springframework/spring-expression/5.3.29/spring-expression-5.3.29.jar:/home/yusef/.m2/repository/org/aspectj/aspectjrt/1.9.21/aspectjrt-1.9.21.jar:/home/yusef/.m2/repository/org/aspectj/aspectjweaver/1.9.21/aspectjweaver-1.9.21.jar:/home/yusef/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar:/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-logging/2.7.14/spring-boot-starter-logging-2.7.14.jar:/home/yusef/.m2/repository/ch/qos/logback/logback-classic/1.2.12/logback-classic-1.2.12.jar:/home/yusef/.m2/repository/ch/qos/logback/logback-core/1.2.12/logback-core-1.2.12.jar:/home/yusef/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/yusef/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.17.2/log4j-to-slf4j-2.17.2.jar:/home/yusef/.m2/repository/org/apache/logging/log4j/log4j-api/2.17.2/log4j-api-2.17.2.jar:/home/yusef/.m2/repository/org/slf4j/jul-to-slf4j/1.7.36/jul-to-slf4j-1.7.36.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'11'
+-sourcepath
+'/home/yusef/Downloads/AOP Module/aop/src/main/java:/home/yusef/Downloads/AOP Module/aop/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/yusef/Downloads/AOP Module/aop/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AOP Starter 1.0.0 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/home/yusef/Downloads/AOP Module/aop/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'AOP Starter 1.0.0 API'
+com.example
+com.example.AOP.config
+com.example.AOP.aspects
+com.example.AOP.Annotation
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-aop/2.7.14/spring-boot-starter-aop-2.7.14.jar = 1777811207919
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter/2.7.14/spring-boot-starter-2.7.14.jar = 1777811208122
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot/2.7.14/spring-boot-2.7.14.jar = 1777811209414
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/2.7.14/spring-boot-autoconfigure-2.7.14.jar = 1777811209216
+/home/yusef/.m2/repository/jakarta/annotation/jakarta.annotation-api/1.3.5/jakarta.annotation-api-1.3.5.jar = 1777811208028
+/home/yusef/.m2/repository/org/yaml/snakeyaml/1.30/snakeyaml-1.30.jar = 1777811208142
+/home/yusef/.m2/repository/org/springframework/spring-aop/5.3.29/spring-aop-5.3.29.jar = 1777811208338
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-web/2.7.14/spring-boot-starter-web-2.7.14.jar = 1777811208269
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-json/2.7.14/spring-boot-starter-json-2.7.14.jar = 1777811208306
+/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.13.5/jackson-databind-2.13.5.jar = 1777811209451
+/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.5/jackson-annotations-2.13.5.jar = 1777811208477
+/home/yusef/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.13.5/jackson-core-2.13.5.jar = 1777811209536
+/home/yusef/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.13.5/jackson-datatype-jdk8-2.13.5.jar = 1777811208604
+/home/yusef/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.13.5/jackson-datatype-jsr310-2.13.5.jar = 1777811208750
+/home/yusef/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.13.5/jackson-module-parameter-names-2.13.5.jar = 1777811208890
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/2.7.14/spring-boot-starter-tomcat-2.7.14.jar = 1777811209009
+/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/9.0.78/tomcat-embed-core-9.0.78.jar = 1777811210025
+/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/9.0.78/tomcat-embed-el-9.0.78.jar = 1777811209515
+/home/yusef/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/9.0.78/tomcat-embed-websocket-9.0.78.jar = 1777811210043
+/home/yusef/.m2/repository/org/springframework/spring-web/5.3.29/spring-web-5.3.29.jar = 1777811210580
+/home/yusef/.m2/repository/org/springframework/spring-webmvc/5.3.29/spring-webmvc-5.3.29.jar = 1777811210406
+/home/yusef/.m2/repository/org/springframework/security/spring-security-core/5.7.10/spring-security-core-5.7.10.jar = 1777811210400
+/home/yusef/.m2/repository/org/springframework/security/spring-security-crypto/5.7.10/spring-security-crypto-5.7.10.jar = 1777811210170
+/home/yusef/.m2/repository/org/springframework/spring-beans/5.3.29/spring-beans-5.3.29.jar = 1777811210838
+/home/yusef/.m2/repository/org/springframework/spring-context/5.3.29/spring-context-5.3.29.jar = 1777811210638
+/home/yusef/.m2/repository/org/springframework/spring-core/5.3.29/spring-core-5.3.29.jar = 1777811211291
+/home/yusef/.m2/repository/org/springframework/spring-jcl/5.3.29/spring-jcl-5.3.29.jar = 1777811210646
+/home/yusef/.m2/repository/org/springframework/spring-expression/5.3.29/spring-expression-5.3.29.jar = 1777811210836
+/home/yusef/.m2/repository/org/aspectj/aspectjrt/1.9.21/aspectjrt-1.9.21.jar = 1777811210902
+/home/yusef/.m2/repository/org/aspectj/aspectjweaver/1.9.21/aspectjweaver-1.9.21.jar = 1777811211993
+/home/yusef/.m2/repository/javax/servlet/javax.servlet-api/4.0.1/javax.servlet-api-4.0.1.jar = 1777811211178
+/home/yusef/.m2/repository/org/springframework/boot/spring-boot-starter-logging/2.7.14/spring-boot-starter-logging-2.7.14.jar = 1777811211037
+/home/yusef/.m2/repository/ch/qos/logback/logback-classic/1.2.12/logback-classic-1.2.12.jar = 1777811211109
+/home/yusef/.m2/repository/ch/qos/logback/logback-core/1.2.12/logback-core-1.2.12.jar = 1777811211343
+/home/yusef/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar = 1644327230000
+/home/yusef/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.17.2/log4j-to-slf4j-2.17.2.jar = 1777811211285
+/home/yusef/.m2/repository/org/apache/logging/log4j/log4j-api/2.17.2/log4j-api-2.17.2.jar = 1777811211472
+/home/yusef/.m2/repository/org/slf4j/jul-to-slf4j/1.7.36/jul-to-slf4j-1.7.36.jar = 1777811211428
+/home/yusef/Downloads/AOP Module/aop/src/main/java = 1777665376000
+/home/yusef/Downloads/AOP Module/aop/target/generated-sources/annotations = 1777866018905
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/allclasses-index.html = 1777866021438
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/member-search-index.js = 1777866021441
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/search.js = 1777866021457
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/package-search-index.js = 1777866021441
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/copy.svg = 1777866021456
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/stylesheet.css = 1777866021455
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/script.js = 1777866021456
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/search.html = 1777866021450
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/link.svg = 1777866021456
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/index.html = 1777866021430
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/overview-summary.html = 1777866021451
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/tag-search-index.js = 1777866021442
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/module-search-index.js = 1777866021441
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/index-all.html = 1777866021449
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/allpackages-index.html = 1777866021441
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/overview-tree.html = 1777866021428
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/search-page.js = 1777866021457
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/element-list = 1777866021391
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/type-search-index.js = 1777866021441
+/home/yusef/Downloads/AOP Module/aop/target/apidocs/help-doc.html = 1777866021455
