@@ -1,0 +1,6 @@
+**/.git
+**/.idea
+**/target
+**/.m2
+**/node_modules
+**/*.log

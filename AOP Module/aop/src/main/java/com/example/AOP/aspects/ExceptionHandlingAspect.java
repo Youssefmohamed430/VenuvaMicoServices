@@ -20,7 +20,7 @@ public class ExceptionHandlingAspect {
     private static final Logger logger = LoggerFactory.getLogger(ExceptionHandlingAspect.class);
 
  
-    @Around("@annotation(io.github.microservices.aop.annotation.HandleException)")
+    @Around("@annotation(com.example.AOP.Annotation.HandleException)")
     public Object handleException(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             return joinPoint.proceed();

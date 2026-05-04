@@ -1,6 +1,5 @@
 package com.example.authservice.AuthDtos;
 
-import com.example.authservice.Abstractions.Error;
 import com.example.authservice.Models.UserDetails.Roles;
 
 import jakarta.validation.constraints.Email;
