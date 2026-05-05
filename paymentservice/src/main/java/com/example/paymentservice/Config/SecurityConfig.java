@@ -1,10 +1,33 @@
 package com.example.paymentservice.Config;
 
+import com.example.paymentservice.security.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Security is intentionally not configured in this module.
- * This service is kept buildable without depending on external auth/user modules.
- */
 @Configuration
-public class SecurityConfig {}
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/error").permitAll()
+                // You might need to allow Paymob callback without JWT token:
+                // .requestMatchers("/api/payment/callback").permitAll()
+                .anyRequest().authenticated())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+}
