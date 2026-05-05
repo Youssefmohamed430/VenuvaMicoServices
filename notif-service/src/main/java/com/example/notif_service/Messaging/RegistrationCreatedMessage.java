@@ -1,0 +1,15 @@
+package com.example.notif_service.Messaging;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/** Received when Registration Service publishes a new registration */
+@Data @NoArgsConstructor @AllArgsConstructor
+public class RegistrationCreatedMessage {
+    private int userId;
+    private String userName;
+    private int eventId;
+    private String eventTitle;
+    private String message;
+}

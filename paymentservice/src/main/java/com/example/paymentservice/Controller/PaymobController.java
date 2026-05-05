@@ -1,10 +1,18 @@
 package com.example.paymentservice.Controller;
 
+import com.example.AOP.Annotation.HandleException;
+import com.example.AOP.Annotation.Loggable;
+import com.example.paymentservice.DTOs.PaymentRequestDto;
+import com.example.paymentservice.Services.PayMobService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/Paymob")
@@ -12,54 +20,60 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class PaymobController {
 
-    // ===== POST /api/Paymob/pay =====
-    // Initiate a card payment — returns a PayMob iFrame URL
-    // userId is passed as a query param (or extracted from JWT in production)
+    private final PayMobService payMobService;
+
+    /**
+     * POST /api/Paymob/pay
+     * Initiate a card payment — returns a PayMob iFrame URL.
+     * userId is extracted from JWT in production (passed as param during development).
+     */
     @PostMapping("/pay")
+    @HandleException
+    @Loggable(value = "InitiatePayment", logArguments = false, logResult = false)
     public ResponseEntity<?> pay(
             @RequestParam(required = false) Integer amount,
             @RequestParam(required = false) Integer amountCents,
             @RequestParam int userId,
             @RequestParam int eventId) {
-        try {
-            // Accept either `amount` (EGP) or `amountCents` (smallest unit). Prefer `amount` when provided.
-            int amountToUse;
-            if (amount != null) {
-                amountToUse = amount;
-            } else if (amountCents != null) {
-                // convert piasters to EGP
-                amountToUse = amountCents / 100;
-            } else {
-                throw new IllegalArgumentException("Required request parameter 'amount' or 'amountCents' is missing");
-            }
 
-            log.info("PaymobController.pay() called with userId={}, amount(EGP)={}", userId, amountToUse);
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
-                    .body("PayMob integration is not implemented in this service module.");
-        } catch (Exception ex) {
-            // Log full exception details for diagnosis
-            log.error("PAYMENT FAILED - Cause: {}", ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Payment failed: " + ex.getMessage());
+        // Accept either `amount` (EGP) or `amountCents` (smallest unit)
+        int amountToUse;
+        if (amount != null) {
+            amountToUse = amount;
+        } else if (amountCents != null) {
+            amountToUse = amountCents / 100;
+        } else {
+            throw new IllegalArgumentException("Required request parameter 'amount' or 'amountCents' is missing");
         }
+
+        log.info("[USER] PaymobController.pay() — userId={}, amount(EGP)={}", userId, amountToUse);
+        String iframeUrl = payMobService.initiatePayment(amountToUse, userId, eventId);
+        return ResponseEntity.ok(Map.of("iframeUrl", iframeUrl));
     }
 
-    // ===== POST /api/Paymob/callback =====
-    // PayMob webhook — receives transaction result and verifies HMAC
-    // Must be public (no auth) so PayMob servers can call it
+    /**
+     * POST /api/Paymob/callback
+     * PayMob webhook — receives transaction result and verifies HMAC.
+     * Must be PUBLIC (no auth) — PayMob servers call this directly.
+     * MUST always return 200 OK immediately; actual processing is async (RabbitMQ).
+     */
     @PostMapping("/callback")
+    @HandleException
+    @Loggable(value = "PaymobCallback", logArguments = false, logResult = false)
     public ResponseEntity<Void> callback(
-            @RequestBody Object payload,
+            @RequestBody String payload,
             @RequestParam(value = "hmac", required = false) String hmacHeader) {
+
+        log.info("[WEBHOOK] PaymobController.callback() — PayMob notification received, hmac={}", hmacHeader);
+
         try {
-            log.info("PaymobController.callback() received PayMob notification");
-            // Always return 200 to PayMob so it doesn't retry
-            return ResponseEntity.ok().build();
+            payMobService.paymobCallback(payload, hmacHeader);
         } catch (Exception ex) {
-            log.error("PaymobController.callback() error processing PayMob callback", ex);
-            // Still return 200 to prevent PayMob retry loops
-            return ResponseEntity.ok().build();
+            // Log but don't fail — always return 200 so PayMob doesn't retry
+            log.error("[WEBHOOK] PaymobController.callback() — Error processing callback: {}", ex.getMessage(), ex);
         }
+
+        // Always return 200 to PayMob — processing is async via RabbitMQ
+        return ResponseEntity.ok().build();
     }
 }
-

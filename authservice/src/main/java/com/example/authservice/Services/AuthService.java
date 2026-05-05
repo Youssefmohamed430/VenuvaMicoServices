@@ -10,6 +10,7 @@ import com.example.AOP.Annotation.Loggable;
 import com.example.authservice.AuthDtos.AuthResponse;
 import com.example.authservice.AuthDtos.LoginRequest;
 import com.example.authservice.AuthDtos.RegisterRequest;
+import com.example.authservice.AuthDtos.UserResponseDto;
 import com.example.authservice.Exceptions.DataConflictException;
 import com.example.authservice.Models.UserDetails.RefreshToken;
 import com.example.authservice.Models.UserDetails.Roles;
@@ -183,4 +184,19 @@ public class AuthService {
                         user.getUsername()
                 );
                 }
-}
+
+        // ===== Get User By ID (Internal — used by other microservices) =====
+        @Loggable(value = "GetUserById", logArguments = true, logResult = false)
+        public UserResponseDto getUserById(int id) {
+                log.info("[START] AuthService.getUserById() — id={}", id);
+                User user = userRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                log.info("[OK] AuthService.getUserById() — Found user {}", user.getEmail());
+                return new UserResponseDto(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getRole().name()
+                );
+        }
+}

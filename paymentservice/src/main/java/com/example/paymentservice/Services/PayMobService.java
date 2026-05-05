@@ -14,7 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.example.paymentservice.Enums.PaymentStatus;
+import com.example.paymentservice.Messaging.PaymentPublisher;
+import com.example.paymentservice.Messaging.PaymentSuccessEvent;
 import com.example.paymentservice.Models.Payment;
 import com.example.paymentservice.Repos.PaymentRepo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,6 +36,7 @@ public class PayMobService {
 
     private final RestTemplate restTemplate;
     private final PaymentRepo paymentRepository;
+    private final PaymentPublisher paymentPublisher; // RabbitMQ publisher
 
     private static final String BASE_URL = "https://accept.paymob.com/api/";
 
@@ -184,7 +189,29 @@ public class PayMobService {
         return iframeUrl;
     }
 
-    // ===== CALLBACK VERIFICATION =====
+    /**
+     * Alias for payWithCard — called by PaymobController.pay()
+     */
+    public String initiatePayment(int amount, int userId, int eventId) {
+        return payWithCard(amount, userId, eventId);
+    }
+
+    /**
+     * String-based overload for PaymobController.
+     * Parses the raw JSON string and delegates to the typed method.
+     */
+    public boolean paymobCallback(String rawPayload, String hmacHeader) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PaymobCallbackPayload payload = mapper.readValue(rawPayload, PaymobCallbackPayload.class);
+            return paymobCallback(payload, hmacHeader);
+        } catch (Exception e) {
+            log.error("[ERROR] PayMobService.paymobCallback(String) — Failed to parse payload: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    // ===== CALLBACK VERIFICATION (Typed) =====
     public boolean paymobCallback(PaymobCallbackPayload payload, String hmacHeader) {
         try {
             log.info("[START] PayMobService.paymobCallback() — Processing payment notification");
@@ -255,11 +282,20 @@ public class PayMobService {
             payment.setTransactionDate(LocalDateTime.now());
             paymentRepository.save(payment);
 
-            // ===== REGISTRATION LOGIC REMOVED =====
-            // User registration to event should be handled by a separate service or API call
+            // ===== PUBLISH RABBITMQ EVENT (Async — Fire-and-Forget) =====
             if (Boolean.TRUE.equals(obj.success)) {
                 log.info("[OK] PayMobService.paymobCallback() — Payment successful for transaction: {}", obj.id);
-                log.info("[INFO] PayMobService.paymobCallback() — Retrieved userId: {}, eventId: {} from payment mapping", userId, eventId);
+                try {
+                    PaymentSuccessEvent event = new PaymentSuccessEvent(
+                        userId,
+                        eventId,
+                        obj.order.id,
+                        BigDecimal.valueOf(obj.amountCents).divide(BigDecimal.valueOf(100))
+                    );
+                    paymentPublisher.publishPaymentSuccess(event);
+                } catch (Exception pubEx) {
+                    log.warn("[WARN] PayMobService.paymobCallback() — Failed to publish payment.success event: {}", pubEx.getMessage());
+                }
             } else {
                 log.warn("[WARN] PayMobService.paymobCallback() — Payment unsuccessful for transaction: {}", obj.id);
             }

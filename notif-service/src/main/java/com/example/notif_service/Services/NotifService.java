@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import com.example.AOP.Annotation.Loggable;
 import com.example.notif_service.Abstractions.Error;
 import com.example.notif_service.Abstractions.Result;
+import com.example.notif_service.DTOs.CreateNotificationDto;
 import com.example.notif_service.DTOs.NotifDTO;
 import com.example.notif_service.Module.Notification;
 import com.example.notif_service.Module.UserNotification;
@@ -25,11 +27,12 @@ public class NotifService implements INotifService {
 
     private final UserNotificationRepository userNotifRepoGeneric;
     private final NotificationRepository notifRepo;
-    
+
     @Override
+    @Loggable(value = "GetNotificationsById", logArguments = true, logResult = false)
     public Result<List<NotifDTO>> getNotifsById(int id) {
         log.info("NotifService.getNotifsById() called with userId={}", id);
-        
+
         List<UserNotification> notifs = userNotifRepoGeneric.findAll()
                 .stream()
                 .filter(n -> n.getUserId() == id)
@@ -50,23 +53,24 @@ public class NotifService implements INotifService {
                     );
                 })
                 .filter(dto -> dto != null)
-                .collect(Collectors.toList()); 
+                .collect(Collectors.toList());
 
         log.info("NotifService.getNotifsById() success: {} notifications retrieved for userId={}", dtoList.size(), id);
         return Result.success(dtoList);
     }
 
     @Override
+    @Loggable(value = "MarkNotificationRead", logArguments = true, logResult = false)
     public Result<NotifDTO> markNotifAsRead(int notifId) {
         log.info("[START] NotifService.markNotifAsRead() — notifId={}", notifId);
-        
+
         Optional<UserNotification> notifOptional = userNotifRepoGeneric.findById(notifId);
-        
+
         if (!notifOptional.isPresent()) {
             log.warn("[WARN] NotifService.markNotifAsRead() — Notification not found: {}", notifId);
             return Result.failure(new Error("Notif.NotFound", "Notification not found"));
         }
-        
+
         UserNotification notif = notifOptional.get();
         Notification n = notifRepo.findById(notif.getNotifId()).orElse(null);
 
@@ -90,6 +94,7 @@ public class NotifService implements INotifService {
     }
 
     @Override
+    @Loggable(value = "SendNotification", logArguments = false, logResult = false)
     public Result<Object> sendNotification(String message) {
         log.info("[START] NotifService.sendNotification() — Broadcasting message");
 
@@ -102,4 +107,42 @@ public class NotifService implements INotifService {
         log.info("[OK] NotifService.sendNotification() — Notification created with id={}", notif.getNotifId());
         return Result.success(null);
     }
-}
+
+    /**
+     * Create a notification for a specific user.
+     * Called by:
+     *   - POST /api/notifications (REST endpoint)
+     *   - RabbitMQ consumers (EventConsumer, PaymentConsumer, RegistrationConsumer)
+     */
+    @Override
+    @Loggable(value = "CreateNotification", logArguments = false, logResult = false)
+    public Result<NotifDTO> createNotification(CreateNotificationDto dto) {
+        log.info("[START] NotifService.createNotification() — userId={}, eventId={}", dto.getUserId(), dto.getEventId());
+
+        // Save global notification message
+        Notification notif = new Notification();
+        notif.setMessage(dto.getMessage());
+        notif.setDate(LocalDateTime.now());
+        notifRepo.save(notif);
+
+        // Link notification to specific user
+        UserNotification userNotif = UserNotification.builder()
+                .userId(dto.getUserId())
+                .notifId(notif.getNotifId())
+                .isRead(false)
+                .build();
+        userNotifRepoGeneric.save(userNotif);
+
+        log.info("[OK] NotifService.createNotification() — Created notifId={} for userId={}",
+                notif.getNotifId(), dto.getUserId());
+
+        return Result.success(new NotifDTO(
+                notif.getNotifId(),
+                notif.getMessage(),
+                notif.getDate(),
+                dto.getUserId(),
+                "Unknown",
+                false
+        ));
+    }
+}

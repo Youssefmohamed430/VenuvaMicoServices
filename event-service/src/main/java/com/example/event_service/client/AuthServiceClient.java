@@ -15,16 +15,17 @@ public class AuthServiceClient {
     private final RestTemplate restTemplate;
     private final String authServiceUrl;
 
-    public AuthServiceClient(RestTemplate restTemplate,/* ده لينك وهمي لغايه ما يتم الربط */
-                            @Value("${services.auth.url:http://localhost:9999}") String authServiceUrl) {
+    public AuthServiceClient(RestTemplate restTemplate,
+                            @Value("${services.auth.url:http://localhost:8081}") String authServiceUrl) {
         this.restTemplate = restTemplate;
-        this.authServiceUrl = "authServiceUrl";
+        this.authServiceUrl = authServiceUrl; // FIX: was hardcoded to "authServiceUrl" string literal
     }
 
     public OrganizerDto getOrganizerById(int organizerId) {
         try {
+            // FIX: was /api/admin/organizers/{id} — now uses the correct internal endpoint
             return restTemplate.getForObject(
-                authServiceUrl + "/api/admin/organizers/" + organizerId,
+                authServiceUrl + "/api/auth/organizers/" + organizerId,
                 OrganizerDto.class
             );
         } catch (Exception e) {

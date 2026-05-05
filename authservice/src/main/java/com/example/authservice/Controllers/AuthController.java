@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.example.authservice.AuthDtos.AuthResponse;
 import com.example.authservice.AuthDtos.LoginRequest;
 import com.example.authservice.AuthDtos.RefreshTokenRequest;
 import com.example.authservice.AuthDtos.RegisterRequest;
+import com.example.authservice.AuthDtos.UserResponseDto;
 import com.example.authservice.Models.UserDetails.User;
 import com.example.authservice.Services.AuthService;
 import com.example.authservice.Services.RefreshTokenService;
@@ -99,5 +101,33 @@ public class AuthController {
         User user = (User) userDetails;
         refreshTokenService.deleteByUserId(user.getUserId());
         return ResponseEntity.noContent().build();
+    }
+
+    // ===== INTERNAL ENDPOINTS (used by other microservices) =====
+
+    /**
+     * GET /api/auth/users/{id}
+     * Used by: Registration Service (sync), Notification Service
+     * Returns basic user info (id, name, email, role)
+     */
+    @GetMapping("/users/{id}")
+    @HandleException
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable int id) {
+        log.info("[INTERNAL] AuthController.getUserById() — id={}", id);
+        UserResponseDto user = authService.getUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    /**
+     * GET /api/auth/organizers/{id}
+     * Used by: Event Service (sync) to display organizer name on events
+     * Alias of getUserById — same data, semantic endpoint for clarity
+     */
+    @GetMapping("/organizers/{id}")
+    @HandleException
+    public ResponseEntity<UserResponseDto> getOrganizerById(@PathVariable int id) {
+        log.info("[INTERNAL] AuthController.getOrganizerById() — id={}", id);
+        UserResponseDto organizer = authService.getUserById(id);
+        return ResponseEntity.ok(organizer);
     }
 }

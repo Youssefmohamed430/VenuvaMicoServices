@@ -1,4 +1,4 @@
-package com.example.notif_service.services;
+package com.example.notif_service.Services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
