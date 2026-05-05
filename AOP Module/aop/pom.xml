@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,20 +12,19 @@
     <packaging>jar</packaging>
 
     <name>AOP Starter</name>
-    <description>Spring Boot Starter للـ Aspect-Oriented Programming Annotations</description>
+    <description>Spring Boot Starter for Aspect-Oriented Programming Annotations</description>
     <url>https://github.com/yourusername/aop-starter</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.14</version>
+        <version>3.5.11</version>
         <relativePath/>
     </parent>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <aspectj.version>1.9.21</aspectj.version>
     </properties>
 
     <dependencies>
@@ -48,23 +47,21 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- AspectJ -->
+        <!-- AspectJ (managed by spring-boot-starter-aop, versions from BOM) -->
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>${aspectj.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
         </dependency>
 
-        <!-- Servlet -->
+        <!-- Jakarta Servlet (Spring Boot 3+ uses jakarta namespace) -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -95,8 +92,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.AOP.Annotation.HandleException;
+import com.example.AOP.Annotation.Loggable;
 import com.example.authservice.AuthDtos.AuthResponse;
 import com.example.authservice.AuthDtos.LoginRequest;
 import com.example.authservice.AuthDtos.RefreshTokenRequest;
@@ -38,7 +39,8 @@ public class AuthController {
 
 
     @PostMapping("/login")
-     @HandleException
+    @HandleException
+    @Loggable(value = "Login", logArguments = false, logResult = false)
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         log.info("[PUBLIC] AuthController.login() — Action: User login attempt");
         AuthResponse response = authService.login(request);
@@ -47,6 +49,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @HandleException
+    @Loggable(value = "Register", logArguments = false, logResult = false)
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         log.info("[PUBLIC] AuthController.register() — Action: New user registration");
         AuthResponse response = authService.register(request);
@@ -56,6 +59,7 @@ public class AuthController {
     @PostMapping("/register/organizer")
     @PreAuthorize("hasRole('ADMIN')")
     @HandleException
+    @Loggable(value = "RegisterOrganizer", logArguments = false, logResult = false)
     public ResponseEntity<AuthResponse> registerOrganizer(
             @Valid @RequestBody RegisterRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -67,6 +71,7 @@ public class AuthController {
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     @HandleException
+    @Loggable(value = "GetCurrentUser", logArguments = false, logResult = false)
     public ResponseEntity<AuthResponse> getCurrentUser(
             @AuthenticationPrincipal UserDetails userDetails) {
         log.info("[USER] AuthController.getCurrentUser() — User: {}", userDetails.getUsername());
@@ -76,6 +81,7 @@ public class AuthController {
 
     @GetMapping("/check-email")
     @HandleException
+    @Loggable(value = "CheckEmail", logArguments = true, logResult = false)
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         log.info("[PUBLIC] AuthController.checkEmail() — Checking email existence");
         boolean exists = authService.checkEmail(email);
@@ -85,6 +91,7 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     @HandleException
+    @Loggable(value = "RefreshToken", logArguments = false, logResult = false)
     public ResponseEntity<AuthResponse> refreshToken(
             @Valid @RequestBody RefreshTokenRequest request) {
         log.info("[PUBLIC] AuthController.refreshToken() — Refreshing access token");
@@ -95,6 +102,7 @@ public class AuthController {
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     @HandleException
+    @Loggable(value = "Logout", logArguments = false, logResult = false)
     public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("[USER] AuthController.logout() — User: {}", userDetails.getUsername());
         // Cast to your User entity to get the ID
@@ -112,6 +120,7 @@ public class AuthController {
      */
     @GetMapping("/users/{id}")
     @HandleException
+    @Loggable(value = "GetUserById", logArguments = true, logResult = false)
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable int id) {
         log.info("[INTERNAL] AuthController.getUserById() — id={}", id);
         UserResponseDto user = authService.getUserById(id);
@@ -125,6 +134,7 @@ public class AuthController {
      */
     @GetMapping("/organizers/{id}")
     @HandleException
+    @Loggable(value = "GetOrganizerById", logArguments = true, logResult = false)
     public ResponseEntity<UserResponseDto> getOrganizerById(@PathVariable int id) {
         log.info("[INTERNAL] AuthController.getOrganizerById() — id={}", id);
         UserResponseDto organizer = authService.getUserById(id);
