@@ -11,6 +11,7 @@ import com.example.event_service.dto.EventDtos.AllEventsDto;
 import com.example.event_service.dto.EventDtos.CreateEventDto;
 import com.example.event_service.dto.EventDtos.DetailedEventDto;
 import com.example.event_service.dto.EventDtos.EventCreatedEvent;
+import com.example.event_service.dto.EventDtos.EventUpdatedEvent;
 import com.example.event_service.messaging.EventPublisher;
 import com.example.event_service.repository.CategoryRepository;
 import com.example.event_service.repository.EventRepository;
@@ -125,6 +126,17 @@ public class EventService {
         if (dto.getEventStatus() != null) event.setEventStatus(dto.getEventStatus());
         event.setMaxAttendance(dto.getMaxAttendance());
         eventRepository.save(event);
+
+        // Publish event.updated → Notification Service will notify registered users
+        String formattedDate = event.getDate().format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"));
+        EventUpdatedEvent updatedEvent = new EventUpdatedEvent();
+        updatedEvent.setEventId(event.getId());
+        updatedEvent.setTitle(event.getTitle());
+        updatedEvent.setDate(formattedDate);
+        updatedEvent.setLocation(event.getLocation());
+        updatedEvent.setMessage("Event Updated: " + event.getTitle() + " on " + formattedDate + " at " + event.getLocation());
+        eventPublisher.publishEventUpdated(updatedEvent);
+
         return true;
     }
 

@@ -29,17 +29,26 @@ public class EventConsumer {
         log.info("[RabbitMQ] EventConsumer.handleEventCreated() — eventId={}, title={}",
                 message.getEventId(), message.getTitle());
 
-        // Create a system-wide notification (userId=0 = broadcast marker)
-        // Individual user notifications can be created by Registration Service
-        CreateNotificationDto dto = new CreateNotificationDto();
-        dto.setUserId(0); // 0 = broadcast / system notification
-        dto.setEventId(message.getEventId());
-        dto.setMessage(message.getMessage() != null
+        String msgText = message.getMessage() != null
             ? message.getMessage()
-            : "New event available: " + message.getTitle() + " on " + message.getDate() + " at " + message.getLocation());
+            : "New event available: " + message.getTitle() + " on " + message.getDate() + " at " + message.getLocation();
 
-        notifService.createNotification(dto);
+        notifService.sendNotificationToAllAttendees(msgText, message.getEventId(), message.getTitle());
 
-        log.info("[RabbitMQ] EventConsumer — Notification created for event.created event");
+        log.info("[RabbitMQ] EventConsumer — Notification sent for event.created");
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.EVENT_UPDATED_QUEUE)
+    public void handleEventUpdated(EventUpdatedMessage message) {
+        log.info("[RabbitMQ] EventConsumer.handleEventUpdated() — eventId={}, title={}",
+                message.getEventId(), message.getTitle());
+
+        String msgText = message.getMessage() != null
+            ? message.getMessage()
+            : "Event Updated: " + message.getTitle() + " on " + message.getDate() + " at " + message.getLocation();
+
+        notifService.sendNotificationToEventRegistrants(message.getEventId(), msgText, message.getTitle());
+
+        log.info("[RabbitMQ] EventConsumer — Notification sent for event.updated");
     }
 }

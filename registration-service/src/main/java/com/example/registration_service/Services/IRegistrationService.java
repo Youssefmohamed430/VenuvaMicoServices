@@ -23,4 +23,6 @@ public interface IRegistrationService {
     Result<Integer> getNumberOfRegestersForEvent(int eventId);
 
     Result<BigDecimal> getTotalSpents(int userId);
+
+    Result<List<RegistrationDto>> getRegistrationsForEvent(int eventId);
 }

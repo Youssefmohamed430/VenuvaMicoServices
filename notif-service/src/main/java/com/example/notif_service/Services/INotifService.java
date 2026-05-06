@@ -20,4 +20,8 @@ public interface INotifService {
      * and internally by RabbitMQ consumers.
      */
     Result<NotifDTO> createNotification(CreateNotificationDto dto);
+
+    Result<Object> sendNotificationToAllAttendees(String message, int eventId, String title);
+
+    Result<Object> sendNotificationToEventRegistrants(int eventId, String message, String title);
 }

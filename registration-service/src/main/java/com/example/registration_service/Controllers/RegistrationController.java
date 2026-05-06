@@ -88,6 +88,19 @@ public class RegistrationController {
         return ResponseUtility.toResponse(result);
     }
 
+    /**
+     * GET /api/registrations/event/{eventId}
+     * Used by: Notification Service (sync)
+     */
+    @GetMapping("/event/{eventId}")
+    @HandleException
+    @Loggable(value = "GetRegistrationsForEvent", logArguments = true, logResult = false)
+    public ResponseEntity<?> getRegistrationsForEvent(@PathVariable int eventId) {
+        log.info("[INTERNAL] RegistrationController.getRegistrationsForEvent() — eventId={}", eventId);
+        var result = registrationService.getRegistrationsForEvent(eventId);
+        return ResponseUtility.toResponse(result);
+    }
+
     public record MessageResponse(String message) {
     }
 }

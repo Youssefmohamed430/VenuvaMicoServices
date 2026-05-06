@@ -10,6 +10,10 @@ import com.example.notif_service.Abstractions.Error;
 import com.example.notif_service.Abstractions.Result;
 import com.example.notif_service.DTOs.CreateNotificationDto;
 import com.example.notif_service.DTOs.NotifDTO;
+import com.example.notif_service.Client.AuthServiceClient;
+import com.example.notif_service.Client.RegistrationServiceClient;
+import com.example.notif_service.DTOs.RegistrationDto;
+import com.example.notif_service.DTOs.UserDto;
 import com.example.notif_service.Module.Notification;
 import com.example.notif_service.Module.UserNotification;
 import com.example.notif_service.Repos.NotificationRepository;
@@ -27,6 +31,9 @@ public class NotifService implements INotifService {
 
     private final UserNotificationRepository userNotifRepoGeneric;
     private final NotificationRepository notifRepo;
+    private final AuthServiceClient authServiceClient;
+    private final RegistrationServiceClient registrationServiceClient;
+    private final EmailService emailService;
 
     @Override
     @Loggable(value = "GetNotificationsById", logArguments = true, logResult = false)
@@ -144,5 +151,81 @@ public class NotifService implements INotifService {
                 "Unknown",
                 false
         ));
+    }
+
+    @Override
+    @Loggable(value = "SendNotificationToAllAttendees", logArguments = true, logResult = false)
+    public Result<Object> sendNotificationToAllAttendees(String message, int eventId, String title) {
+        log.info("[START] NotifService.sendNotificationToAllAttendees() — eventId={}", eventId);
+
+        // Save global notification message
+        Notification notif = new Notification();
+        notif.setMessage(message);
+        notif.setDate(LocalDateTime.now());
+        notifRepo.save(notif);
+
+        // Fetch all attendees
+        List<UserDto> attendees = authServiceClient.getAllAttendees();
+        int totalUsersNotified = 0;
+
+        for (UserDto user : attendees) {
+            UserNotification userNotif = UserNotification.builder()
+                    .userId(user.getId())
+                    .notifId(notif.getNotifId())
+                    .isRead(false)
+                    .build();
+            userNotifRepoGeneric.save(userNotif);
+            totalUsersNotified++;
+
+            // Send Email
+            emailService.sendEmail(
+                    user.getEmail(),
+                    "New Notification: " + title,
+                    message
+            );
+        }
+
+        log.info("[OK] NotifService.sendNotificationToAllAttendees() — Notification sent to {} users", totalUsersNotified);
+        return Result.success(null);
+    }
+
+    @Override
+    @Loggable(value = "SendNotificationToEventRegistrants", logArguments = true, logResult = false)
+    public Result<Object> sendNotificationToEventRegistrants(int eventId, String message, String title) {
+        log.info("[START] NotifService.sendNotificationToEventRegistrants() — eventId={}", eventId);
+
+        // Fetch registrations
+        List<RegistrationDto> registrations = registrationServiceClient.getRegistrationsByEventId(eventId);
+        if (registrations == null || registrations.isEmpty()) {
+            log.info("[OK] No registrations found for eventId={}. No notifications sent.", eventId);
+            return Result.success(null);
+        }
+
+        // Save global notification message
+        Notification notif = new Notification();
+        notif.setMessage(message);
+        notif.setDate(LocalDateTime.now());
+        notifRepo.save(notif);
+
+        for (RegistrationDto reg : registrations) {
+            UserNotification userNotif = UserNotification.builder()
+                    .userId(reg.getUserId())
+                    .notifId(notif.getNotifId())
+                    .isRead(false)
+                    .build();
+            userNotifRepoGeneric.save(userNotif);
+
+            if (reg.getUserEmail() != null && !reg.getUserEmail().isEmpty()) {
+                // Send Email
+                emailService.sendEmail(
+                        reg.getUserEmail(),
+                        "Event Update: " + title,
+                        message
+                );
+            }
+        }
+
+        log.info("[OK] NotifService.sendNotificationToEventRegistrants() — Notification sent to {} users", registrations.size());
+        return Result.success(null);
     }
 }

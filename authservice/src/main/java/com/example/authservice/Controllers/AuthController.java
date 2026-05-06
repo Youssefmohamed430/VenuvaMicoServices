@@ -20,9 +20,12 @@ import com.example.authservice.AuthDtos.LoginRequest;
 import com.example.authservice.AuthDtos.RefreshTokenRequest;
 import com.example.authservice.AuthDtos.RegisterRequest;
 import com.example.authservice.AuthDtos.UserResponseDto;
+import com.example.authservice.Models.UserDetails.Roles;
 import com.example.authservice.Models.UserDetails.User;
 import com.example.authservice.Services.AuthService;
 import com.example.authservice.Services.RefreshTokenService;
+
+import java.util.List;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -139,5 +142,19 @@ public class AuthController {
         log.info("[INTERNAL] AuthController.getOrganizerById() — id={}", id);
         UserResponseDto organizer = authService.getUserById(id);
         return ResponseEntity.ok(organizer);
+    }
+
+    /**
+     * GET /api/auth/users/role/{role}
+     * Used by: Notification Service (sync)
+     */
+    @GetMapping("/users/role/{role}")
+    @HandleException
+    @Loggable(value = "GetUsersByRole", logArguments = true, logResult = false)
+    public ResponseEntity<List<UserResponseDto>> getUsersByRole(@PathVariable String role) {
+        log.info("[INTERNAL] AuthController.getUsersByRole() — role={}", role);
+        Roles roleEnum = Roles.valueOf(role.toUpperCase());
+        List<UserResponseDto> users = authService.getUsersByRole(roleEnum);
+        return ResponseEntity.ok(users);
     }
 }

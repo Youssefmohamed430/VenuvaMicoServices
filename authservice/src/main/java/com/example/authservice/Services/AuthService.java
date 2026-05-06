@@ -1,7 +1,9 @@
 package com.example.authservice.Services;
 
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -198,5 +200,19 @@ public class AuthService {
                         user.getEmail(),
                         user.getRole().name()
                 );
+        }
+
+        // ===== Get Users By Role (Internal — used by other microservices) =====
+        @Loggable(value = "GetUsersByRole", logArguments = true, logResult = false)
+        public List<UserResponseDto> getUsersByRole(Roles role) {
+                log.info("[START] AuthService.getUsersByRole() — role={}", role);
+                List<User> users = userRepository.findByRole(role);
+                log.info("[OK] AuthService.getUsersByRole() — Found {} users with role {}", users.size(), role);
+                return users.stream().map(user -> new UserResponseDto(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getRole().name()
+                )).collect(Collectors.toList());
         }
 }

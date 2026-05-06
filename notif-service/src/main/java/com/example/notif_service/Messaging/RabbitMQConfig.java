@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
  *
  * Consumes:
  *   - event.created        → Send notification to all users about new event
+ *   - event.updated        → Send notification to registered users about updated event
  *   - registration.created → Send confirmation notification to registered user
  *   - payment.success      → Send payment confirmation notification to user
  */
@@ -25,11 +26,13 @@ public class RabbitMQConfig {
 
     // Queue names — unique to this service so each service gets its own copy of messages
     public static final String EVENT_CREATED_QUEUE      = "notif.event.created";
+    public static final String EVENT_UPDATED_QUEUE      = "notif.event.updated";
     public static final String REGISTRATION_CREATED_QUEUE = "notif.registration.created";
     public static final String PAYMENT_SUCCESS_QUEUE    = "notif.payment.success";
 
     // Routing keys (must match publisher)
     public static final String EVENT_CREATED_KEY        = "event.created";
+    public static final String EVENT_UPDATED_KEY        = "event.updated";
     public static final String REGISTRATION_CREATED_KEY = "registration.created";
     public static final String PAYMENT_SUCCESS_KEY      = "payment.success";
 
@@ -47,6 +50,17 @@ public class RabbitMQConfig {
     @Bean
     public Binding eventCreatedBinding(Queue eventCreatedQueue, TopicExchange venuvExchange) {
         return BindingBuilder.bind(eventCreatedQueue).to(venuvExchange).with(EVENT_CREATED_KEY);
+    }
+
+    // ===== event.updated =====
+    @Bean
+    public Queue eventUpdatedQueue() {
+        return new Queue(EVENT_UPDATED_QUEUE, true);
+    }
+
+    @Bean
+    public Binding eventUpdatedBinding(Queue eventUpdatedQueue, TopicExchange venuvExchange) {
+        return BindingBuilder.bind(eventUpdatedQueue).to(venuvExchange).with(EVENT_UPDATED_KEY);
     }
 
     // ===== registration.created =====

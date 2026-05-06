@@ -73,4 +73,14 @@ public class EventDtos {
         private String location;
         private String message;
     }
+
+    // Event updated event — بنبعتها على RabbitMQ
+    @Data
+    public static class EventUpdatedEvent {
+        private int eventId;
+        private String title;
+        private String date;
+        private String location;
+        private String message;
+    }
 }

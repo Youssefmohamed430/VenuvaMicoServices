@@ -217,4 +217,35 @@ public class RegistrationService implements IRegistrationService {
         log.info("[OK] RegistrationService.getTotalSpents() — Total spent: {} for userId={}", totalSpents, userId);
         return Result.success(totalSpents);
     }
+
+    @Override
+    @Loggable(value = "GetRegistrationsForEvent", logArguments = true, logResult = false)
+    public Result<List<RegistrationDto>> getRegistrationsForEvent(int eventId) {
+        log.info("[START] RegistrationService.getRegistrationsForEvent() — eventId={}", eventId);
+        List<Registration> registrations = repository.findByEventId(eventId);
+        
+        List<RegistrationDto> result = registrations.stream().map(r -> {
+            RegistrationDto regDto = new RegistrationDto();
+            regDto.setRegistrationId(r.getId());
+            regDto.setUserId(r.getUserId());
+            regDto.setEventId(r.getEventId());
+            
+            // Try to get user details to provide email
+            try {
+                UserDto user = authClient.getUserById(r.getUserId());
+                if (user != null) {
+                    regDto.setUserName(user.getName());
+                    regDto.setUserEmail(user.getEmail());
+                }
+            } catch (Exception e) {
+                log.warn("[WARN] Could not fetch user details for userId={}", r.getUserId());
+            }
+
+            regDto.setStatus(r.getRegistrationStatus().toString());
+            return regDto;
+        }).collect(Collectors.toList());
+
+        log.info("[OK] RegistrationService.getRegistrationsForEvent() — Found {} registrations", result.size());
+        return Result.success(result);
+    }
 }

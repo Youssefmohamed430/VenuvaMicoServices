@@ -16,6 +16,7 @@ public class EventPublisher {
 
     public static final String EXCHANGE = "venuva.events";
     public static final String EVENT_CREATED_ROUTING_KEY = "event.created";
+    public static final String EVENT_UPDATED_ROUTING_KEY = "event.updated";
 
     /**
      * بنبعت event لما event جديد يتعمل
@@ -29,5 +30,14 @@ public class EventPublisher {
 
         rabbitTemplate.convertAndSend(EXCHANGE, EVENT_CREATED_ROUTING_KEY, event);
         log.info("[RabbitMQ] Published event.created successfully");
+    }
+
+    public void publishEventUpdated(com.example.event_service.dto.EventDtos.EventUpdatedEvent event) {
+        
+        log.info("[RabbitMQ] Publishing event.updated — eventId={}, title={}",
+                event.getEventId(), event.getTitle());
+
+        rabbitTemplate.convertAndSend(EXCHANGE, EVENT_UPDATED_ROUTING_KEY, event);
+        log.info("[RabbitMQ] Published event.updated successfully");
     }
 }
