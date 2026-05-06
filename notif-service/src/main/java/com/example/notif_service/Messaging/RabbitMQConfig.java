@@ -87,7 +87,7 @@ public class RabbitMQConfig {
 
     @Bean
     public org.springframework.amqp.support.converter.MessageConverter jsonMessageConverter() {
-        return new org.springframework.amqp.support.converter.JacksonJsonMessageConverter();
+        return new org.springframework.amqp.support.converter.Jackson2JsonMessageConverter();
     }
 
     @Bean

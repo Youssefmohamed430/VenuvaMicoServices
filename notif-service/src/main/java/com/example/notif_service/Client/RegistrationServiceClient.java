@@ -27,24 +27,15 @@ public class RegistrationServiceClient {
         log.info("[HTTP] Calling Registration Service: GET {}", url);
 
         try {
-            // Unpack custom Result structure if returned by registration-service, 
-            // but the controller returns ResponseUtility.toResponse(result) which could be Result<?> or standard wrapper
-            // Assuming we get a standard structure containing data
-            // To simplify, if the response is Result<List<RegistrationDto>>, we need a wrapper or just map it.
-            // Let's use a generic map or custom deserialization if needed.
-            // We'll assume the API returns the list directly or wrapped in data.
-            // Wait, looking at RegistrationController: ResponseUtility.toResponse(result)
-            // Usually returns {"data": [...], "success": true, ...}
-            
-            ResponseEntity<RegistrationResponseWrapper> response = restTemplate.exchange(
+            ResponseEntity<List<RegistrationDto>> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     null,
-                    RegistrationResponseWrapper.class
+                    new ParameterizedTypeReference<List<RegistrationDto>>() {}
             );
             
-            if (response.getBody() != null && response.getBody().getData() != null) {
-                return response.getBody().getData();
+            if (response.getBody() != null) {
+                return response.getBody();
             }
             return List.of();
 
@@ -52,15 +43,5 @@ public class RegistrationServiceClient {
             log.error("[HTTP] Failed to call Registration Service: {}", e.getMessage());
             return List.of();
         }
-    }
-
-    private static class RegistrationResponseWrapper {
-        private List<RegistrationDto> data;
-        private boolean success;
-        
-        public List<RegistrationDto> getData() { return data; }
-        public void setData(List<RegistrationDto> data) { this.data = data; }
-        public boolean isSuccess() { return success; }
-        public void setSuccess(boolean success) { this.success = success; }
     }
 }

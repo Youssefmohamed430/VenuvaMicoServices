@@ -19,10 +19,15 @@ public class RolesConverter implements AttributeConverter<Roles, String> {
             return null;
         }
 
-        String normalized = dbData.startsWith(ROLE_PREFIX)
-                ? dbData.substring(ROLE_PREFIX.length())
-                : dbData;
+        String normalized = dbData.trim().toUpperCase();
+        if (normalized.startsWith(ROLE_PREFIX)) {
+            normalized = normalized.substring(ROLE_PREFIX.length());
+        }
 
-        return Roles.valueOf(normalized);
+        try {
+            return Roles.valueOf(normalized);
+        } catch (IllegalArgumentException e) {
+            return Roles.ATTENDEE; // Default fallback if unknown role
+        }
     }
 }

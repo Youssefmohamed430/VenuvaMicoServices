@@ -59,7 +59,7 @@ public class PayMobService {
         log.info("[START] PayMobService.authenticate() — Authenticating with PayMob");
 
         Map<String, String> body = new HashMap<>();
-        body.put("api_key", apiKey);
+        body.put("api_key", apiKey.trim());
 
         ResponseEntity<AuthResponse> response = restTemplate.postForEntity(
                 BASE_URL + "auth/tokens",

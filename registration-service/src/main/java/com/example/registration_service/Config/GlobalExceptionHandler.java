@@ -1,4 +1,4 @@
-package com.example.authservice.Config;
+package com.example.registration_service.Config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.persistence.EntityNotFoundException;
@@ -12,30 +12,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.authservice.Exceptions.DataConflictException;
-import com.example.authservice.Exceptions.InvalidCredentialsException;
-import com.example.authservice.Exceptions.ResourceNotFoundException;
-
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-/**
- * Global Exception Handler for all REST controllers.
- * Converts exceptions to clean error responses without exposing internal details.
- * Logs full details internally for debugging.
- * 
- * Rules:
- * - NEVER expose: class names, SQL errors, stack traces, Spring internals, field names
- * - ALWAYS give actionable, user-friendly messages
- * - Log full exception internally: log.error("[{}] {} {} — {}", code, method, uri, ex.getMessage(), ex)
- */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    /**
-     * Handle IllegalArgumentException → 400 Bad Request
-     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
             IllegalArgumentException ex,
@@ -53,9 +36,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    /**
-     * Handle validation errors from @Valid annotations → 400 Bad Request
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -79,11 +59,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    /**
-     * Handle ResourceNotFoundException, EntityNotFoundException and NoSuchElementException → 404 Not Found
-     */
     @ExceptionHandler({
-            ResourceNotFoundException.class,
             EntityNotFoundException.class,
             NoSuchElementException.class
     })
@@ -103,29 +79,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    /**
-     * Handle DataConflictException (duplicate email, etc.) → 409 Conflict
-     */
-    @ExceptionHandler(DataConflictException.class)
-    public ResponseEntity<ErrorResponse> handleDataConflictException(
-            DataConflictException ex,
-            HttpServletRequest request) {
-        
-        String code = "CONFLICT";
-        String method = request.getMethod();
-        String uri = request.getRequestURI();
-        log.error("[{}] {} {} — {}", code, method, uri, ex.getMessage(), ex);
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                code
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-    }
-
-    /**
-     * Handle DataIntegrityViolationException (duplicate keys, foreign key violations) → 409 Conflict
-     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
             DataIntegrityViolationException ex,
@@ -144,9 +97,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    /**
-     * Handle AccessDeniedException (authorization failures) → 403 Forbidden
-     */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(
             AccessDeniedException ex,
@@ -164,29 +114,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
-    /**
-     * Handle InvalidCredentialsException → 401 Unauthorized
-     */
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(
-            InvalidCredentialsException ex,
-            HttpServletRequest request) {
-        
-        String code = "UNAUTHORIZED";
-        String method = request.getMethod();
-        String uri = request.getRequestURI();
-        log.error("[{}] {} {} — {}", code, method, uri, ex.getMessage()); // Don't log full stack trace for bad login
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                code
-        );
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
-    /**
-     * Handle RuntimeException (catch-all for service-level exceptions) → 400 Bad Request
-     */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(
             RuntimeException ex,
@@ -204,9 +131,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    /**
-     * Handle all other Exceptions → 500 Internal Server Error
-     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex,

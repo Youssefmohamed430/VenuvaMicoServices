@@ -14,6 +14,8 @@ import com.example.authservice.AuthDtos.LoginRequest;
 import com.example.authservice.AuthDtos.RegisterRequest;
 import com.example.authservice.AuthDtos.UserResponseDto;
 import com.example.authservice.Exceptions.DataConflictException;
+import com.example.authservice.Exceptions.InvalidCredentialsException;
+import com.example.authservice.Exceptions.ResourceNotFoundException;
 import com.example.authservice.Models.UserDetails.RefreshToken;
 import com.example.authservice.Models.UserDetails.Roles;
 import com.example.authservice.Models.UserDetails.User;
@@ -66,12 +68,12 @@ public class AuthService {
                 User user = userRepository.findByEmail(loginDto.getEmail())
                         .orElseThrow(() -> {
                                 log.warn("[WARN] AuthService.login() — Email not found: {}", loginDto.getEmail());
-                                return new RuntimeException("Email not found");
+                                return new InvalidCredentialsException("Invalid email or password");
                         });
 
                 if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
                         log.warn("[WARN] AuthService.login() — Wrong password for email={}", loginDto.getEmail());
-                        throw new RuntimeException("Unauthorized");
+                        throw new InvalidCredentialsException("Invalid email or password");
                 }
 
                 String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
@@ -166,7 +168,7 @@ public class AuthService {
         @Loggable(value = "Refresh Token", logArguments = false, logResult = false)
         public AuthResponse refreshToken(String requestToken) {
                 RefreshToken refreshToken = refreshTokenService.findByToken(requestToken)
-                        .orElseThrow(() -> new RuntimeException("Refresh token not found"));
+                        .orElseThrow(() -> new InvalidCredentialsException("Refresh token not found"));
 
                 refreshTokenService.verifyExpiration(refreshToken); // throws if expired
 
@@ -192,7 +194,7 @@ public class AuthService {
         public UserResponseDto getUserById(int id) {
                 log.info("[START] AuthService.getUserById() — id={}", id);
                 User user = userRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
                 log.info("[OK] AuthService.getUserById() — Found user {}", user.getEmail());
                 return new UserResponseDto(
                         user.getId(),
