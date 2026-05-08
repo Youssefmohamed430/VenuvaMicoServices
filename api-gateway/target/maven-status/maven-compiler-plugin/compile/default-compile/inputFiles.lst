@@ -1,0 +1,3 @@
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/ApiGatewayApplication.java
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/JwtAuthenticationFilter.java
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/SecurityConfig.java

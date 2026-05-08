@@ -24,8 +24,7 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/error").permitAll()
-                // You might need to allow Paymob callback without JWT token:
-                // .requestMatchers("/api/payment/callback").permitAll()
+                .requestMatchers("/api/Paymob/callback").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

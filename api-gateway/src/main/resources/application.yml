@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*" # Use patterns when allowCredentials is true
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        - id: auth-service
+          uri: http://auth-service:8080
+          predicates:
+            - Path=/api/auth/**, /api/admin/**
+        
+        - id: registration-service
+          uri: http://registration-service:8085
+          predicates:
+            - Path=/api/registrations/**
+        
+        - id: event-service
+          uri: http://event-service:8088
+          predicates:
+            - Path=/api/events/**, /api/categories/**
+        
+        - id: notif-service
+          uri: http://notif-service:9090
+          predicates:
+            - Path=/api/notifications/**
+        
+        - id: paymentservice
+          uri: http://paymentservice:9099
+          predicates:
+            - Path=/api/Paymob/**
+
+jwt:
+  secret: ${JWT_SECRET:c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro}

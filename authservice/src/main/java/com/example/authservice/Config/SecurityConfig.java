@@ -73,6 +73,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/register").permitAll()
+                .requestMatchers("/api/auth/check-email").permitAll()
                 .requestMatchers("/api/registrations/register").permitAll()
                 .requestMatchers("/api/auth/refresh-token").permitAll()
                 .requestMatchers("/api/Paymob/callback").permitAll()
