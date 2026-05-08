@@ -1,3 +1,6 @@
 /home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/ApiGatewayApplication.java
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/ErrorResponse.java
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/GatewayExceptionHandler.java
 /home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/JwtAuthenticationFilter.java
+/home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/JwtUtil.java
 /home/yusef/Desktop/VenuvaMicoServices/api-gateway/src/main/java/com/example/gateway/config/SecurityConfig.java

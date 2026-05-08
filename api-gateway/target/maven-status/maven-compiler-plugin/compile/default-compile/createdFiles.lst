@@ -1,3 +1,7 @@
 com/example/gateway/config/JwtAuthenticationFilter.class
 com/example/gateway/config/SecurityConfig.class
+com/example/gateway/config/JwtUtil.class
+com/example/gateway/config/GatewayExceptionHandler.class
+com/example/gateway/config/ErrorResponse$ErrorResponseBuilder.class
 com/example/gateway/ApiGatewayApplication.class
+com/example/gateway/config/ErrorResponse.class

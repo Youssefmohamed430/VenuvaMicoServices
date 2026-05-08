@@ -42,7 +42,7 @@ spring:
         - id: paymentservice
           uri: http://paymentservice:9099
           predicates:
-            - Path=/api/payments/**
+            - Path=/api/Paymob/**
 
 jwt:
   secret: ${JWT_SECRET:c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro}
