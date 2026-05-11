@@ -1,38 +1,3 @@
-# Switch to ec2-user
-sudo su - ec2-user
-cd /opt/venuva
-
-# Create environment file (not heavily used since we inline everything, but kept as reference)
-cat > .env.prod << 'EOF'
-SPRING_DATASOURCE_USERNAME=venuva_app
-SPRING_DATASOURCE_PASSWORD=YourSecurePassword
-JWT_SECRET=c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
-JWT_EXPIRATION=86400000
-JWT_REFRESH_EXPIRATION=604800000
-RABBITMQ_HOST=rabbitmq
-RABBITMQ_PORT=5672
-RABBITMQ_USERNAME=guest
-RABBITMQ_PASSWORD=guest
-AUTH_SERVICE_URL=http://auth-service:8080
-EVENT_SERVICE_URL=http://event-service:8088
-REGISTRATION_SERVICE_URL=http://registration-service:8085
-NOTIFICATION_SERVICE_URL=http://notif-service:9090
-PAYMENT_SERVICE_URL=http://paymentservice:9099
-SPRING_MAIL_HOST=smtp.gmail.com
-SPRING_MAIL_PORT=587
-SPRING_MAIL_USERNAME=Waselny615@gmail.com
-SPRING_MAIL_PASSWORD=uhnp sryl muzi bqiy
-SPRING_MAIL_SMTP_AUTH=true
-SPRING_MAIL_SMTP_STARTTLS_ENABLE=true
-PAYMOB_API_KEY=ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TVRFd056WTFOU3dpYm1GdFpTSTZJakUzTnpjMU5qRXlNek11T0Rrd01EYzBJbjAuSjBNQWdwOHFLNG9RX1V1SmljZ2E4eXZuM29Ia1ZzNUt2SzRzUEUteFZINC1vekNFeWhtVFRUazJUVGhCbFpNTVNDQXZDMlRDd2N4UkItUUozSVJ3M0E=
-PAYMOB_INTEGRATION_ID=5403815
-PAYMOB_IFRAME_ID=980804
-HMAC_SECRET_KEY=F7AE6EE1CCBE4AC58BF60ECA4ABA3AA6
-EOF
-
-# Create docker-compose.prod.yml
-cat > docker-compose.prod.yml << 'EOF'
-version: '3.8'
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -62,9 +27,9 @@ services:
       JWT_SECRET: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
-      SPRING_DATASOURCE_URL: jdbc:mysql://venuvaone-mysql.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/authdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: venuva_app
-      SPRING_DATASOURCE_PASSWORD: YourSecurePassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://venuva-db.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/authdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: VenuvaDatabase#123
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
@@ -90,9 +55,9 @@ services:
       JWT_SECRET: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
-      SPRING_DATASOURCE_URL: jdbc:mysql://venuvaone-mysql.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/registrationdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: venuva_app
-      SPRING_DATASOURCE_PASSWORD: YourSecurePassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://venuva-db.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/registrationdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: VenuvaDatabase#123
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
@@ -118,9 +83,9 @@ services:
       JWT_SECRET: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
-      SPRING_DATASOURCE_URL: jdbc:mysql://venuvaone-mysql.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/eventdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: venuva_app
-      SPRING_DATASOURCE_PASSWORD: YourSecurePassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://venuva-db.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/eventdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: VenuvaDatabase#123
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
@@ -146,9 +111,9 @@ services:
       JWT_SECRET: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
-      SPRING_DATASOURCE_URL: jdbc:mysql://venuvaone-mysql.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/notificationdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: venuva_app
-      SPRING_DATASOURCE_PASSWORD: YourSecurePassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://venuva-db.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/notificationdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: VenuvaDatabase#123
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
@@ -179,9 +144,9 @@ services:
       JWT_SECRET: c2VjcmV0LWtleS1mb3Itand0LXRva2VuLWdlbmVyYXRpb24td2l0aC1lbm91Z2gtbGVuZ3Ro
       JWT_EXPIRATION: 86400000
       JWT_REFRESH_EXPIRATION: 604800000
-      SPRING_DATASOURCE_URL: jdbc:mysql://venuvaone-mysql.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/paymentdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: venuva_app
-      SPRING_DATASOURCE_PASSWORD: YourSecurePassword
+      SPRING_DATASOURCE_URL: jdbc:mysql://venuva-db.chwa08w46btg.eu-north-1.rds.amazonaws.com:3306/paymentdb?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: VenuvaDatabase#123
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
@@ -218,16 +183,3 @@ services:
       - notif-service
       - paymentservice
     restart: always
-EOF
-
-# Pull all images from Docker Hub
-docker-compose -f docker-compose.prod.yml pull
-
-# Start all services
-docker-compose -f docker-compose.prod.yml up -d
-
-# Check all containers are running
-docker-compose -f docker-compose.prod.yml ps
-
-# Follow logs to verify startup (Ctrl+C to exit)
-docker-compose -f docker-compose.prod.yml logs -f
